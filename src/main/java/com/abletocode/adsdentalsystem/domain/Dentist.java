@@ -1,5 +1,6 @@
 package com.abletocode.adsdentalsystem.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,7 @@ public class Dentist {
     private String specialization;
 
     private String profilePictureUrl;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "dentist", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
 

@@ -10,6 +10,8 @@ import com.abletocode.adsdentalsystem.service.BillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BillServiceImpl implements BillService {
@@ -34,4 +36,29 @@ public class BillServiceImpl implements BillService {
                 bill.getGeneratedDate()
         );
     }
+
+    @Override
+    public List<BillResponse> getAllBills() {
+        return billRepo.findAll()
+                .stream()
+                .map(bill -> new BillResponse(
+                        bill.getId(),
+                        bill.getAmount(),
+                        bill.getStatus(),
+                        bill.getGeneratedDate()
+                )).toList();
+    }
+
+    @Override
+    public BillResponse getBillById(Long id) {
+        Bill bill = billRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill not found"));
+        return new BillResponse(
+                bill.getId(),
+                bill.getAmount(),
+                bill.getStatus(),
+                bill.getGeneratedDate()
+        );
+    }
+
 }

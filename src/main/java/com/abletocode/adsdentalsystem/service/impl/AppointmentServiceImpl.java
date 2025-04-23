@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -27,6 +28,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final DentistRepository dentistRepo;
     private final SurgeryRepository surgeryRepo;
     private final BillRepository billRepo; // ✅ make sure this is declared and injected
+
 
     @Override
     @Transactional
@@ -92,4 +94,24 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return AppointmentMapper.toResponse(appointment);
     }
+
+    @Override
+    public List<AppointmentResponse> getAllAppointments() {
+        return appointmentRepo.findAll()
+                .stream()
+                .map(AppointmentMapper::toResponse)
+                .toList();
+    }
+    @Override
+    public List<AppointmentResponse> getAppointmentsByPatientId(Long patientId) {
+        Patient patient = patientRepo.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
+
+        return patient.getAppointments()
+                .stream()
+                .map(AppointmentMapper::toResponse)
+                .toList();
+    }
+
+
 }

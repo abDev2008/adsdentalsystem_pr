@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/dentists")
 @RequiredArgsConstructor
@@ -20,4 +22,14 @@ public class DentistController {
         Dentist saved = dentistService.createDentist(request);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
+    @GetMapping
+    public ResponseEntity<List<Dentist>> getAllDentists() {
+        return ResponseEntity.ok(dentistService.getAllDentists());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Dentist> getDentistById(@PathVariable Long id) {
+        return ResponseEntity.ok(dentistService.getDentistById(id));
+    }
+
 }
