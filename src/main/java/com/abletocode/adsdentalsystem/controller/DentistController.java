@@ -2,6 +2,8 @@ package com.abletocode.adsdentalsystem.controller;
 
 import com.abletocode.adsdentalsystem.domain.Dentist;
 import com.abletocode.adsdentalsystem.dto.dentist.CreateDentistRequest;
+import com.abletocode.adsdentalsystem.dto.dentist.DentistResponse;
+import com.abletocode.adsdentalsystem.dto.dentist.UpdateDentistRequest;
 import com.abletocode.adsdentalsystem.service.DentistService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +33,16 @@ public class DentistController {
     public ResponseEntity<Dentist> getDentistById(@PathVariable Long id) {
         return ResponseEntity.ok(dentistService.getDentistById(id));
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<DentistResponse> updateDentist(
+            @PathVariable Long id,
+            @RequestBody @Valid UpdateDentistRequest request) {
+        DentistResponse updatedDentist = dentistService.updateDentist(id, request);
+        return ResponseEntity.ok(updatedDentist);
+    }
+
+
+
+
 
 }

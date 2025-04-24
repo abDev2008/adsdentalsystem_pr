@@ -1,32 +1,18 @@
 package com.abletocode.adsdentalsystem.dto.dentist;
 
-import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateDentistRequest {
-
-    @Email
-    @NotBlank
+public class DentistResponse {
+    private Long id;
     private String email;
-
-    @NotBlank
     private String phone;
-
-    @NotBlank
     private String specialization;
-
     private String profilePictureUrl;
-
-    @NotBlank
     private String firstName;
-
-    @NotBlank
     private String lastName;
-
-    @Min(0)
     private int experienceYears;
 }

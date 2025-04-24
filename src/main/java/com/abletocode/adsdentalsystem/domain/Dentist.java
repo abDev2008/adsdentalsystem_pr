@@ -2,6 +2,7 @@ package com.abletocode.adsdentalsystem.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -26,6 +27,16 @@ public class Dentist {
     private String specialization;
 
     private String profilePictureUrl;
+
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Column(name = "experience_years")
+    private int experienceYears;
+
     @JsonIgnore
     @OneToMany(mappedBy = "dentist", cascade = CascadeType.ALL)
     private List<Appointment> appointments;

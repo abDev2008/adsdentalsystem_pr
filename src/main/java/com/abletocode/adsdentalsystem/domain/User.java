@@ -25,7 +25,7 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    private Role role; // ⬅️ This must remain a Role entity
 }

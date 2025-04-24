@@ -1,21 +1,24 @@
 package com.abletocode.adsdentalsystem.domain;
 
-
-import com.abletocode.adsdentalsystem.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "roles")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Table(name = "roles") // Recommended plural name
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
-    private UserRole name;
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    public Role(String name) {
+        this.name = name;
+    }
 }
