@@ -2,10 +2,8 @@ package com.abletocode.adsdentalsystem.dto.dentist;
 
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class DentistResponse {
     private Long id;
     private String email;

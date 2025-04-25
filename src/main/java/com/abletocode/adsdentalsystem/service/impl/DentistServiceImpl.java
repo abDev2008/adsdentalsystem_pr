@@ -52,4 +52,12 @@ public class DentistServiceImpl implements DentistService {
 
         return dentistMapper.toResponse(updatedDentist);
     }
+
+    @Override
+    public void deleteDentist(Long id) {
+        Dentist dentist = dentistRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + id));
+        dentistRepository.delete(dentist);
+    }
+
 }

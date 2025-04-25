@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class CreatePatientRequest {
+@Builder
+public class UpdatePatientRequest {
 
     @NotBlank
     private String firstName;
@@ -28,5 +29,5 @@ public class CreatePatientRequest {
     @Past
     private LocalDate dob;
 
-    private String profilePictureUrl; // ✅ Add this field
+    private String profilePictureUrl;
 }

@@ -31,6 +31,7 @@ public class BillServiceImpl implements BillService {
 
         return new BillResponse(
                 bill.getId(),
+                bill.getAppointment().getId(),
                 bill.getAmount(),
                 bill.getStatus(),
                 bill.getGeneratedDate()
@@ -43,10 +44,12 @@ public class BillServiceImpl implements BillService {
                 .stream()
                 .map(bill -> new BillResponse(
                         bill.getId(),
+                        bill.getAppointment().getId(),
                         bill.getAmount(),
                         bill.getStatus(),
                         bill.getGeneratedDate()
-                )).toList();
+                ))
+                .toList();
     }
 
     @Override
@@ -55,10 +58,10 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(() -> new ResourceNotFoundException("Bill not found"));
         return new BillResponse(
                 bill.getId(),
+                bill.getAppointment().getId(),
                 bill.getAmount(),
                 bill.getStatus(),
                 bill.getGeneratedDate()
         );
     }
-
 }

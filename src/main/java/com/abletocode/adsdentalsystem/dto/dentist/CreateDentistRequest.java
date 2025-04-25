@@ -3,10 +3,8 @@ package com.abletocode.adsdentalsystem.dto.dentist;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class CreateDentistRequest {
 
     @Email

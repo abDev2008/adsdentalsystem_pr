@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor @AllArgsConstructor
 public class BillResponse {
     private Long id;
+    private Long appointmentId;
     private BigDecimal amount;
     private BillStatus status;
     private LocalDate generatedDate;

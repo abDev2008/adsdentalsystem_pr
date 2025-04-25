@@ -1,0 +1,30 @@
+package com.abletocode.adsdentalsystem.mapper;
+
+import com.abletocode.adsdentalsystem.domain.Availability;
+import com.abletocode.adsdentalsystem.domain.Dentist;
+import com.abletocode.adsdentalsystem.dto.availability.AvailabilityResponse;
+import com.abletocode.adsdentalsystem.dto.availability.CreateAvailabilityRequest;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalTime;
+
+@Component
+public class AvailabilityMapper {
+
+    public Availability toEntity(CreateAvailabilityRequest dto, Dentist dentist) {
+        Availability availability = new Availability();
+        availability.setDentist(dentist);
+        availability.setStartTime(dto.getStartTime().toLocalTime());
+        availability.setEndTime(dto.getEndTime().toLocalTime());
+        return availability;
+    }
+
+    public AvailabilityResponse toResponse(Availability entity) {
+        AvailabilityResponse response = new AvailabilityResponse();
+        response.setId(entity.getId());
+        response.setDentistId(entity.getDentist().getId());
+        response.setStartTime(entity.getStartTime().atDate(java.time.LocalDate.now()));
+        response.setEndTime(entity.getEndTime().atDate(java.time.LocalDate.now()));
+        return response;
+    }
+}
