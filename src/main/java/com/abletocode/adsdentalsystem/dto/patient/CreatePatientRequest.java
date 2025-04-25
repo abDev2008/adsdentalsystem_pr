@@ -28,5 +28,5 @@ public class CreatePatientRequest {
     @Past
     private LocalDate dob;
 
-    private String profilePictureUrl; // ✅ Add this field
+    private String profilePictureUrl;
 }

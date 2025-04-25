@@ -6,7 +6,7 @@ import com.abletocode.adsdentalsystem.dto.availability.AvailabilityResponse;
 import com.abletocode.adsdentalsystem.dto.availability.CreateAvailabilityRequest;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalTime;
+
 
 @Component
 public class AvailabilityMapper {

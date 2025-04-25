@@ -58,13 +58,12 @@ public class AuthController {
 
 
 
-        // ✅ Create user and assign entity
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setRole(role);  // ✅ assign the Role entity
+        user.setRole(role);
 
         userRepository.save(user);
 

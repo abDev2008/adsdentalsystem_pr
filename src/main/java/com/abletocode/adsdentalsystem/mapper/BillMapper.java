@@ -13,7 +13,7 @@ public class BillMapper {
         Bill bill = new Bill();
         bill.setAppointment(appointment);
         bill.setAmount(dto.getAmount());
-        bill.setGeneratedDate(dto.getIssuedDate()); // ✅ renamed to match entity field
+        bill.setGeneratedDate(dto.getIssuedDate());
         return bill;
     }
 
@@ -22,7 +22,7 @@ public class BillMapper {
         response.setId(entity.getId());
         response.setAppointmentId(entity.getAppointment().getId());
         response.setAmount(entity.getAmount());
-        response.setGeneratedDate(entity.getGeneratedDate()); // ✅ renamed
+        response.setGeneratedDate(entity.getGeneratedDate());
         return response;
     }
 }

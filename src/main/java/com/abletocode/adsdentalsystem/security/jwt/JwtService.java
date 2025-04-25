@@ -19,21 +19,18 @@ public class JwtService {
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private long jwtExpiration; // in milliseconds
+    private long jwtExpiration;
 
-//    private Key getSigningKey() {
-//        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
-//    }
 
     private Key getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes); // HMAC SHA-256
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 
     public String generateToken(UserPrincipal user) {
         return Jwts.builder()
-                .setSubject(user.getUsername()) // email
+                .setSubject(user.getUsername())
                 .claim("role", user.getRole())
                 .claim("userId", user.getId())
                 .setIssuedAt(new Date())

@@ -16,11 +16,11 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         for (UserRole userRole : UserRole.values()) {
-            // Check if the role already exists
+
             boolean exists = roleRepository.findByName(userRole.name()).isPresent();
             if (!exists) {
                 Role role = new Role();
-                role.setName(userRole.name()); // Convert ENUM to string
+                role.setName(userRole.name());
                 roleRepository.save(role);
             }
         }

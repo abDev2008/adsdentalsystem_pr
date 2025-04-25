@@ -17,7 +17,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roleName = user.getRole().getName(); // 'getName()' returns a String already
+        String roleName = user.getRole().getName();
         return List.of(new SimpleGrantedAuthority("ROLE_" + roleName.toUpperCase()));
 
     }
@@ -58,7 +58,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     public String getRole() {
-        return user.getRole().getName(); // Correct method to call on Role entity
+        return user.getRole().getName();
     }
 
 
