@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,69 +28,74 @@ class DentistServiceImplTest {
     private DentistServiceImpl dentistService;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void shouldCreateDentistSuccessfully() {
+    void shouldCreateDentist() {
         CreateDentistRequest request = new CreateDentistRequest(
-                "elena@ads.com", "0712345678", "Orthodontist", "http://img.com",
+                "dr@ads.com", "0711223344", "Ortho", "http://img.com",
                 "Elena", "Smith", 5
         );
-
 
         Dentist dentist = new Dentist();
         when(dentistMapper.toEntity(request)).thenReturn(dentist);
         when(dentistRepository.save(dentist)).thenReturn(dentist);
 
         Dentist result = dentistService.createDentist(request);
-
         assertNotNull(result);
         verify(dentistRepository).save(dentist);
     }
 
     @Test
-    void shouldUpdateDentistSuccessfully() {
-        Long id = 1L;
+    void shouldGetAllDentists() {
+        when(dentistRepository.findAll()).thenReturn(List.of(new Dentist(), new Dentist()));
+        List<Dentist> all = dentistService.getAllDentists();
+        assertEquals(2, all.size());
+    }
+
+    @Test
+    void shouldGetDentistById() {
+        Dentist dentist = new Dentist(); dentist.setId(1L);
+        when(dentistRepository.findById(1L)).thenReturn(Optional.of(dentist));
+        Dentist found = dentistService.getDentistById(1L);
+        assertEquals(1L, found.getId());
+    }
+
+    @Test
+    void shouldThrowIfDentistNotFoundById() {
+        when(dentistRepository.findById(99L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> dentistService.getDentistById(99L));
+    }
+
+    @Test
+    void shouldUpdateDentist() {
+        Dentist existing = new Dentist(); existing.setId(1L);
         UpdateDentistRequest request = new UpdateDentistRequest(
-                "Jane", "Doe", "0799999999", "Surgery", 10, "http://img.com"
+                "Jane", "Doe", "0700000000", "Surgery", 8, "http://img.com"
         );
 
-
-        Dentist existing = new Dentist();
-        existing.setId(id);
-
-        when(dentistRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(dentistRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(dentistRepository.save(existing)).thenReturn(existing);
         when(dentistMapper.toResponse(existing)).thenReturn(new DentistResponse());
 
-        DentistResponse response = dentistService.updateDentist(id, request);
-
+        DentistResponse response = dentistService.updateDentist(1L, request);
         assertNotNull(response);
         verify(dentistRepository).save(existing);
     }
 
     @Test
-    void shouldThrowWhenDentistNotFoundOnUpdate() {
-        Long id = 10L;
-        UpdateDentistRequest request = new UpdateDentistRequest();
-
-        when(dentistRepository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class,
-                () -> dentistService.updateDentist(id, request));
+    void shouldDeleteDentist() {
+        Dentist dentist = new Dentist(); dentist.setId(1L);
+        when(dentistRepository.findById(1L)).thenReturn(Optional.of(dentist));
+        dentistService.deleteDentist(1L);
+        verify(dentistRepository).delete(dentist);
     }
 
     @Test
-    void shouldDeleteDentistSuccessfully() {
-        Long id = 5L;
-        Dentist dentist = new Dentist();
-        dentist.setId(id);
-
-        when(dentistRepository.findById(id)).thenReturn(Optional.of(dentist));
-
-        assertDoesNotThrow(() -> dentistService.deleteDentist(id));
-        verify(dentistRepository).delete(dentist);
+    void shouldThrowIfDeletingNonExistentDentist() {
+        when(dentistRepository.findById(88L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> dentistService.deleteDentist(88L));
     }
 }

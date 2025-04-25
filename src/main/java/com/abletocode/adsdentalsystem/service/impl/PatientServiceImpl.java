@@ -11,8 +11,11 @@ import com.abletocode.adsdentalsystem.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Service
 @RequiredArgsConstructor
@@ -64,4 +67,7 @@ public class PatientServiceImpl implements PatientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id " + id));
         patientRepository.delete(patient);
     }
+
+
+
 }

@@ -27,5 +27,5 @@ public class User {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
-    private Role role; // ⬅️ This must remain a Role entity
+    private Role role;
 }
