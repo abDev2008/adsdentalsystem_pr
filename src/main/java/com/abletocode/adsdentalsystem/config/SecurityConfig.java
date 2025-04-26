@@ -30,6 +30,26 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**"
                         ).permitAll()
+
+                        // Patient-only access
+                        .requestMatchers(
+                                "/api/appointments/**",
+                                "/api/bills/**"
+                        ).hasRole("PATIENT")
+
+                        // Dentist and Admin access (fix applied here)
+                        .requestMatchers(
+                                "/api/availabilities/**"
+                        ).hasAnyRole("DENTIST", "ADMIN")
+
+                        // Admin-only access
+                        .requestMatchers(
+                                "/api/dentists/**",
+                                "/api/surgeries/**",
+                                "/api/patients/**"
+                        ).hasRole("ADMIN")
+
+                        // fallback
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -41,9 +61,9 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

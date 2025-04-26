@@ -12,6 +12,7 @@ import com.abletocode.adsdentalsystem.service.AvailabilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Service
@@ -26,8 +27,27 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public Availability createAvailability(CreateAvailabilityRequest request) {
         Dentist dentist = dentistRepository.findById(request.getDentistId())
                 .orElseThrow(() -> new ResourceNotFoundException("Dentist not found"));
-        Availability availability = availabilityMapper.toEntity(request, dentist);
-        return availabilityRepository.save(availability);
+
+        Availability newAvailability = availabilityMapper.toEntity(request, dentist);
+
+        // Calculate day of week from start time
+        DayOfWeek dayOfWeek = request.getStartTime().getDayOfWeek();
+
+        // Check for overlapping availabilities on the same day
+        List<Availability> existing = availabilityRepository.findByDentistIdAndDayOfWeek(dentist.getId(), dayOfWeek);
+
+        for (Availability existingSlot : existing) {
+            boolean overlaps =
+                    !newAvailability.getEndTime().isBefore(existingSlot.getStartTime()) &&
+                            !newAvailability.getStartTime().isAfter(existingSlot.getEndTime());
+
+            if (overlaps) {
+                throw new IllegalArgumentException("Overlapping availability already exists for this time slot.");
+            }
+        }
+
+        newAvailability.setDayOfWeek(dayOfWeek); // Save day of week
+        return availabilityRepository.save(newAvailability);
     }
 
     @Override
