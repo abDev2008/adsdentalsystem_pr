@@ -28,7 +28,24 @@ public class JwtService {
     }
 
 
+//    public String generateToken(UserPrincipal user) {
+//        return Jwts.builder()
+//                .setSubject(user.getUsername())
+//                .claim("role", user.getRole())
+//                .claim("userId", user.getId())
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+//                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
+
     public String generateToken(UserPrincipal user) {
+        System.out.println("----- JWT Token Generation Debug -----");
+        System.out.println("Current System Time: " + new Date());
+        System.out.println("JWT Expiration Config (ms): " + jwtExpiration);
+        System.out.println("Expected Expiration Time: " + new Date(System.currentTimeMillis() + jwtExpiration));
+        System.out.println("---------------------------------------");
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("role", user.getRole())
@@ -38,6 +55,7 @@ public class JwtService {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

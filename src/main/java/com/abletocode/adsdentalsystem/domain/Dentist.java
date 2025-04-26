@@ -1,6 +1,7 @@
 package com.abletocode.adsdentalsystem.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -42,5 +43,6 @@ public class Dentist {
     private List<Appointment> appointments;
 
     @OneToMany(mappedBy = "dentist", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Availability> availabilities;
 }

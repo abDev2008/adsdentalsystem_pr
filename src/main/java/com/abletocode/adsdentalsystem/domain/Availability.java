@@ -1,5 +1,6 @@
 package com.abletocode.adsdentalsystem.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class Availability {
     private LocalTime endTime;
 
     @ManyToOne(optional = false)
+    @JsonBackReference
     @JoinColumn(name = "dentist_id", nullable = false)
     private Dentist dentist;
 }
