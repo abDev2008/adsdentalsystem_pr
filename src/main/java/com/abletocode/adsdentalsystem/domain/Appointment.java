@@ -40,4 +40,8 @@ public class Appointment {
 
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
     private Bill bill;
+
+    public void setAppointmentTime(LocalDateTime localDateTime) {
+        this.dateTime = localDateTime;
+    }
 }

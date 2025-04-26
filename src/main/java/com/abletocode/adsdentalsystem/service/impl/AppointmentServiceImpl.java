@@ -82,9 +82,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         bill.setStatus(BillStatus.UNPAID);
         bill.setGeneratedDate(LocalDate.now());
         bill.setAppointment(appointment);
+        bill.setPatient(patient); // Important: set the patient here
 
         billRepo.save(bill);
+
         appointment.setBill(bill);
+        appointmentRepo.save(appointment); // Update the appointment with the bill
 
         return appointmentMapper.toResponse(appointment);
     }

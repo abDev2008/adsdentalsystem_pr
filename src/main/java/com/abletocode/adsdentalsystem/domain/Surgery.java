@@ -28,4 +28,7 @@ public class Surgery {
     @JsonIgnore
     @OneToMany(mappedBy = "surgery", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
+
+    private String location;
+
 }
