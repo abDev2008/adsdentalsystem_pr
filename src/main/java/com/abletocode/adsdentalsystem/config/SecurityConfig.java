@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/appointments/**",
                                 "/api/bills/**"
-                        ).hasRole("PATIENT")
+                        ).hasAnyRole("PATIENT", "ADMIN")
 
                         // Dentist and Admin access (fix applied here)
                         .requestMatchers(

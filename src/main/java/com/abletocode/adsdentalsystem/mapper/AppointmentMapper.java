@@ -16,7 +16,7 @@ public class AppointmentMapper {
         appointment.setDentist(dentist);
         appointment.setPatient(patient);
         appointment.setSurgery(surgery);
-        appointment.setDateTime(dto.getDateTime());
+        appointment.setDateTime(dto.getAppointmentTime());
         appointment.setTreatmentNotes(dto.getTreatmentNotes());
         return appointment;
     }

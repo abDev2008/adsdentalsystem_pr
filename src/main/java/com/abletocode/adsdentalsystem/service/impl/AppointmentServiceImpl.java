@@ -50,7 +50,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (hasUnpaid)
             throw new IllegalStateException("Patient has unpaid bills and cannot book a new appointment.");
 
-        int currentWeek = req.getDateTime().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+        int currentWeek = req.getAppointmentTime().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
 
         long weeklyAppointments = dentist.getAppointments().stream()
                 .filter(a -> a.getDateTime().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()) == currentWeek)
@@ -60,7 +60,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalStateException("Dentist already has 5 appointments this week.");
 
         boolean hasConflict = appointmentRepo.findAll().stream()
-                .anyMatch(a -> a.getDateTime().equals(req.getDateTime()) &&
+                .anyMatch(a -> a.getDateTime().equals(req.getAppointmentTime()) &&
                         (a.getDentist().getId().equals(dentist.getId()) ||
                                 a.getPatient().getId().equals(patient.getId())));
 
@@ -68,7 +68,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalStateException("Conflicting appointment found for dentist or patient.");
 
         Appointment appointment = new Appointment();
-        appointment.setDateTime(req.getDateTime());
+        appointment.setDateTime(req.getAppointmentTime());
         appointment.setStatus(AppointmentStatus.CONFIRMED);
         appointment.setTreatmentNotes(req.getTreatmentNotes());
         appointment.setPatient(patient);

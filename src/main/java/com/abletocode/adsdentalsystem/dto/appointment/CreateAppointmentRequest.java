@@ -19,7 +19,7 @@ public class CreateAppointmentRequest {
     private Long surgeryId;
 
     @Future
-    private LocalDateTime dateTime;
+    private LocalDateTime appointmentTime;
 
     @Size(max = 1000)
     private String treatmentNotes;
