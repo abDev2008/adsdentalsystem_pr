@@ -9,9 +9,9 @@ import com.abletocode.adsdentalsystem.mapper.DentistMapper;
 import com.abletocode.adsdentalsystem.repository.DentistRepository;
 import com.abletocode.adsdentalsystem.service.DentistService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +27,9 @@ public class DentistServiceImpl implements DentistService {
     }
 
     @Override
-    public List<Dentist> getAllDentists() {
-        return dentistRepository.findAll();
+    public Page<DentistResponse> getAllDentists(Pageable pageable) {
+        return dentistRepository.findAll(pageable)
+                .map(dentistMapper::toResponse);
     }
 
     @Override
@@ -59,5 +60,4 @@ public class DentistServiceImpl implements DentistService {
                 .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + id));
         dentistRepository.delete(dentist);
     }
-
 }

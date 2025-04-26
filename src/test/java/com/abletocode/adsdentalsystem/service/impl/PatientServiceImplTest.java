@@ -10,6 +10,7 @@ import com.abletocode.adsdentalsystem.repository.PatientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -51,18 +52,28 @@ class PatientServiceImplTest {
 
     @Test
     void shouldGetAllPatients() {
-        List<Patient> patients = List.of(new Patient(), new Patient());
-        when(patientRepository.findAll()).thenReturn(patients);
+        Patient patient1 = new Patient();
+        Patient patient2 = new Patient();
+        List<Patient> patients = List.of(patient1, patient2);
+
+        when(patientRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(patients));
         when(patientMapper.toResponse(any())).thenReturn(new PatientResponse());
 
-        assertEquals(2, patientService.getAllPatients().size());
+        Page<PatientResponse> page = patientService.getAllPatients(PageRequest.of(0, 10));
+
+        assertEquals(2, page.getContent().size());
+        verify(patientRepository).findAll(any(Pageable.class));
     }
 
     @Test
     void shouldGetPatientById() {
-        Patient p = new Patient(); p.setId(1L); p.setFirstName("Elena");
+        Patient p = new Patient();
+        p.setId(1L);
+        p.setFirstName("Elena");
+
         when(patientRepository.findById(1L)).thenReturn(Optional.of(p));
         Patient found = patientService.getPatientById(1L);
+
         assertEquals(1L, found.getId());
     }
 
@@ -74,9 +85,12 @@ class PatientServiceImplTest {
 
     @Test
     void shouldDeletePatient() {
-        Patient patient = new Patient(); patient.setId(1L);
+        Patient patient = new Patient();
+        patient.setId(1L);
+
         when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
         patientService.deletePatient(1L);
+
         verify(patientRepository).delete(patient);
     }
 
@@ -84,20 +98,6 @@ class PatientServiceImplTest {
     void shouldThrowWhenDeletingNonExistentPatient() {
         when(patientRepository.findById(88L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> patientService.deletePatient(88L));
-    }
-
-    @Test
-    void shouldReturnAllPatients() {
-        Patient p1 = new Patient(); p1.setId(1L); p1.setFirstName("Elena");
-        Patient p2 = new Patient(); p2.setId(2L); p2.setFirstName("John");
-
-        when(patientRepository.findAll()).thenReturn(List.of(p1, p2));
-        when(patientMapper.toResponse(any())).thenReturn(new PatientResponse());
-
-        List<PatientResponse> result = patientService.getAllPatients();
-
-        assertEquals(2, result.size());
-        verify(patientRepository).findAll();
     }
 
     @Test
@@ -122,6 +122,4 @@ class PatientServiceImplTest {
         assertEquals("Doe", result.getLastName());
         verify(patientRepository).save(existing);
     }
-
-
 }

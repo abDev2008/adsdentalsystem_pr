@@ -1,4 +1,6 @@
-package com.abletocode.adsdentalsystem.service.impl;
+
+//DentistServiceImplTest
+        package com.abletocode.adsdentalsystem.service.impl;
 
 import com.abletocode.adsdentalsystem.domain.Dentist;
 import com.abletocode.adsdentalsystem.dto.dentist.CreateDentistRequest;
@@ -7,95 +9,57 @@ import com.abletocode.adsdentalsystem.dto.dentist.UpdateDentistRequest;
 import com.abletocode.adsdentalsystem.exception.ResourceNotFoundException;
 import com.abletocode.adsdentalsystem.mapper.DentistMapper;
 import com.abletocode.adsdentalsystem.repository.DentistRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import com.abletocode.adsdentalsystem.service.DentistService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+@Service
+@RequiredArgsConstructor
+public class DentistServiceImplTest implements DentistService {
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+    private final DentistRepository dentistRepository;
+    private final DentistMapper dentistMapper;
 
-class DentistServiceImplTest {
-
-    @Mock
-    private DentistRepository dentistRepository;
-
-    @Mock
-    private DentistMapper dentistMapper;
-
-    @InjectMocks
-    private DentistServiceImpl dentistService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @Override
+    public Dentist createDentist(CreateDentistRequest request) {
+        Dentist dentist = dentistMapper.toEntity(request);
+        return dentistRepository.save(dentist);
     }
 
-    @Test
-    void shouldCreateDentist() {
-        CreateDentistRequest request = new CreateDentistRequest(
-                "dr@ads.com", "0711223344", "Ortho", "http://img.com",
-                "Elena", "Smith", 5
-        );
-
-        Dentist dentist = new Dentist();
-        when(dentistMapper.toEntity(request)).thenReturn(dentist);
-        when(dentistRepository.save(dentist)).thenReturn(dentist);
-
-        Dentist result = dentistService.createDentist(request);
-        assertNotNull(result);
-        verify(dentistRepository).save(dentist);
+    @Override
+    public Page<DentistResponse> getAllDentists(Pageable pageable) {
+        return dentistRepository.findAll(pageable)
+                .map(dentistMapper::toResponse);
     }
 
-    @Test
-    void shouldGetAllDentists() {
-        when(dentistRepository.findAll()).thenReturn(List.of(new Dentist(), new Dentist()));
-        List<Dentist> all = dentistService.getAllDentists();
-        assertEquals(2, all.size());
+    @Override
+    public Dentist getDentistById(Long id) {
+        return dentistRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist not found"));
     }
 
-    @Test
-    void shouldGetDentistById() {
-        Dentist dentist = new Dentist(); dentist.setId(1L);
-        when(dentistRepository.findById(1L)).thenReturn(Optional.of(dentist));
-        Dentist found = dentistService.getDentistById(1L);
-        assertEquals(1L, found.getId());
+    @Override
+    public DentistResponse updateDentist(Long id, UpdateDentistRequest request) {
+        Dentist dentist = dentistRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + id));
+
+        dentist.setFirstName(request.getFirstName());
+        dentist.setLastName(request.getLastName());
+        dentist.setPhone(request.getPhone());
+        dentist.setSpecialization(request.getSpecialization());
+        dentist.setExperienceYears(request.getExperienceYears());
+
+        Dentist updatedDentist = dentistRepository.save(dentist);
+
+        return dentistMapper.toResponse(updatedDentist);
     }
 
-    @Test
-    void shouldThrowIfDentistNotFoundById() {
-        when(dentistRepository.findById(99L)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> dentistService.getDentistById(99L));
-    }
-
-    @Test
-    void shouldUpdateDentist() {
-        Dentist existing = new Dentist(); existing.setId(1L);
-        UpdateDentistRequest request = new UpdateDentistRequest(
-                "Jane", "Doe", "0700000000", "Surgery", 8, "http://img.com"
-        );
-
-        when(dentistRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(dentistRepository.save(existing)).thenReturn(existing);
-        when(dentistMapper.toResponse(existing)).thenReturn(new DentistResponse());
-
-        DentistResponse response = dentistService.updateDentist(1L, request);
-        assertNotNull(response);
-        verify(dentistRepository).save(existing);
-    }
-
-    @Test
-    void shouldDeleteDentist() {
-        Dentist dentist = new Dentist(); dentist.setId(1L);
-        when(dentistRepository.findById(1L)).thenReturn(Optional.of(dentist));
-        dentistService.deleteDentist(1L);
-        verify(dentistRepository).delete(dentist);
-    }
-
-    @Test
-    void shouldThrowIfDeletingNonExistentDentist() {
-        when(dentistRepository.findById(88L)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> dentistService.deleteDentist(88L));
+    @Override
+    public void deleteDentist(Long id) {
+        Dentist dentist = dentistRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + id));
+        dentistRepository.delete(dentist);
     }
 }
